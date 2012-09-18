@@ -35,29 +35,29 @@ body {
 }
 
 #game.small {
-    width:750px;
-    height:450px;
+    width:780px;
+    height:455px;
     
-    margin-left:-375px;
-    top:-225px;
+    margin-left:-390px;
+    top:-228px;
 }
 
 #game.tiny {
-    width:400px;
-    height:250px;
+    width:460px;
+    height:268px;
     
-    margin-left:-200px;
-    top:-125px;
+    margin-left:-230px;
+    top:-134px;
 }
 
 /* Device (WxH)        | Usable Size | Game Size | Class
  * --------------------|-------------|-----------|---------
  * Desktop (1920x1080) | 1920x989    | 1200x700  |
  * Desktop (1600x900)  | 1600x809    | 1200x700  |
- * Desktop (1280x720)  | 1280x629    | 750x450   | small
- * Desktop (800x600)   | 800x509     | 750x450   | small
- * iPhone 4 (port)     | 320x480??   | 450x300   | tiny
- * iPhone 4 (land)     | 480x320??   | 450x300   | tiny
- * Moto Rzr (port)     | 360x563     | 450x300   | tiny
- * Moto Rzr (land)     | 640x283     | 450x300   | tiny
+ * Desktop (1280x720)  | 1280x629    | 780x455   | small
+ * Desktop (800x600)   | 800x509     | 780x455   | small
+ * iPhone 4 (port)     | 320x480??   | 460x268   | tiny
+ * iPhone 4 (land)     | 480x320??   | 460x268   | tiny
+ * Moto Rzr (port)     | 360x563     | 460x268   | tiny
+ * Moto Rzr (land)     | 640x283     | 460x268   | tiny
  */
