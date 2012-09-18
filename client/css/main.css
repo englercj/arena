@@ -1,0 +1,63 @@
+body {
+    background:left top url(../img/metal.jpg) repeat #111;
+}
+
+#game {
+    background:#000;
+    border-radius:20px;
+    border:solid 2px #AAA;
+}
+
+/* Sizing Code */
+#horizon {
+    display:block;
+    
+    width:100%;
+    height:1px;
+    
+    position:absolute;
+    top:50%;
+    left:0;
+    
+    overflow:visible;
+    text-align:center;
+}
+
+#game {
+    width:1200px;
+    height:700px;
+    
+    position:absolute;
+    top:-350px;
+    left:50%;
+    
+    margin-left:-600px;
+}
+
+#game.small {
+    width:750px;
+    height:450px;
+    
+    margin-left:-375px;
+    top:-225px;
+}
+
+#game.tiny {
+    width:400px;
+    height:250px;
+    
+    margin-left:-200px;
+    top:-125px;
+}
+
+/* Device (WxH)        | Usable Size | Game Size | Class
+ * --------------------|-------------|-----------|---------
+ * Desktop (1920x1080) | 1920x989    | 1200x700  |
+ * Desktop (1600x900)  | 1600x809    | 1200x700  |
+ * Desktop (1280x720)  | 1280x629    | 750x450   | small
+ * Desktop (800x600)   | 800x509     | 750x450   | small
+ * iPhone 4 (port)     | 320x480??   | 450x300   | tiny
+ * iPhone 4 (land)     | 480x320??   | 450x300   | tiny
+ * Moto Rzr (port)     | 360x563     | 450x300   | tiny
+ * Moto Rzr (land)     | 640x283     | 450x300   | tiny
+ */
