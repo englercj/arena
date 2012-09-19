@@ -4,6 +4,20 @@ body {
 
 #game {
     background:#000;
+    display:none;
+}
+
+#btnStart {
+    width:400px;
+    height:200px;
+    
+    position:absolute;
+    top:-100px;
+    left:50%;
+    
+    margin-left:-200px;
+    
+    font-size:5em;
 }
 
 /* Sizing Code */

@@ -25,12 +25,19 @@ require([
             return;
         }
         
+        var engine;
+        
         $('#btnStart').on('click', function(e) {
             e.preventDefault();
-            $(this).remove();
             
-            var engine = new Engine('#game');
-            engine.start();
+            if(!engine) {
+                engine = new Engine('#game');
+                engine.start();
+                
+                $('#btnStart').text('Show Game');
+            } else {
+                engine.viewport.requestFullScreen();
+            }
         });
     });
 });

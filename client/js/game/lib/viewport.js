@@ -65,12 +65,15 @@ define([
         },
         onFullScreenChange: function(e) {
             console.log('fullscreen', e);
-            if(document.fullscreenEnabled) {
+            if(!document.fullscreenElement) {
+                //fullscreen was disabled, hide!
+                this._$container.hide();
+            } else {
                 //fullscreen is enabled, lets get pointer lock
+                this._$container.show();
                 this.requestPointerLock();
+                this.renderer.setSize(this.width(), this.height());
             }
-            
-            this.renderer.setSize(this.width(), this.height());
         },
         onFullScreenError: function(e) {
             console.warn('Unable to enter fullscreen!', e);
