@@ -22,8 +22,13 @@ require([
             $('#game').append(Detector.getWebGLErrorMessage());
             return;
         }
-
-        var engine = new Engine('#game');
-        engine.start();
+        
+        $('#btnStart').on('click', function(e) {
+            e.preventDefault();
+            $(this).remove();
+            
+            var engine = new Engine('#game');
+            engine.start();
+        });
     });
 });

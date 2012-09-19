@@ -1,0 +1,6 @@
+define({
+    UNIT_SIZE: 250,
+    MOVE_SPEED: 100,
+    LOOK_SPEED_X: 0.005,
+    LOOK_SPEED_Y: 0.0015
+});

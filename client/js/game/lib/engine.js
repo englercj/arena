@@ -2,26 +2,35 @@ define([
     //Modules
     'jquery',
     'game/lib/viewport',
+    'game/lib/controls',
+    'game/lib/constants',
     //Scripts that modify global
     'game/vendor/three/three.min',
     'game/vendor/three/Stats' 
-], function($, Viewport) {
+], function($, Viewport, Controls, CONST) {
     var Engine = Class.extend({
         init: function(container) {
-            var view = this.viewport = new Viewport(container);
-
-            //setup renderer camera and scene
-            var renderer = this.renderer = new THREE.WebGLRenderer(),
-                camera = this.camera = new THREE.PerspectiveCamera(45, view.aspect(), 0.1, 10000),
-                scene = this.scene = new THREE.Scene();
-
-            //add camera to scene
-            scene.add(camera);
+            //setup game
+            var scene = this.scene = new THREE.Scene(),
+                clock = this.clock = new THREE.Clock(),
+                renderer = this.renderer = new THREE.WebGLRenderer(),
+                view = this.viewport = new Viewport(container, renderer),
+                camera = this.camera = new THREE.PerspectiveCamera(60, view.aspect(), 1, 10000),
+                controls = this.controls = new Controls(view, camera);//new THREE.FirstPersonControls(camera);//
+            
+            //add fog to scene
+            scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0005);
+            
+            //setup camera
             camera.position.z = 300;
-
-            renderer.setSize(view.width(), view.height());
-
-            view.append(renderer.domElement);
+            camera.position.y = CONST.UNIT_SIZE * 0.2; //raise camera off the ground
+            scene.add(camera);
+            
+            //setup camera controls
+            /*controls.movementSpeed = CONST.MOVE_SPEED;
+            controls.lookSpeed = CONST.LOOK_SPEED;
+            controls.lookVertical = false;
+            controls.noFly = true;*/
 
             //add a mesh
             var radius = 50,
@@ -62,24 +71,13 @@ define([
         },
         _paint: function() {
             //proxy the call so we retain the context
-            requestAnimFrame($.proxy(this._paint, this));
+            requestAnimationFrame($.proxy(this._paint, this));
             
             this.renderer.render(this.scene, this.camera);
             this.stats.update();
+            this.controls.update(this.clock.getDelta());
         }
     });
     
     return Engine;
 });
-
-
-
-var engine = {
-    init: function() {
-        
-    },
-    animate: function() {
-        requestAnimFrame(engine.animate);
-        renderer.render(scene, camera);
-    }
-};
