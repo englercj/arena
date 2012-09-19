@@ -15,6 +15,8 @@ require([
     'game/lib/util',
     'game/lib/engine',
     //Scripts that modify global:
+    'game/vendor/three/three.min',
+    'game/vendor/three/Stats',
     'game/vendor/three/Detector'
 ], function($, util, Engine) {
     $(function() {

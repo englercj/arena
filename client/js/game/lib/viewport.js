@@ -1,13 +1,15 @@
 define([
     //Modules
     'jquery'
-    //Scripts that modify global
 ], function($) {
     var Viewport = Class.extend({
         init: function(container, renderer) {
             this.isDocument = false;
             this.renderer = renderer;
             this._$doc = $(document);
+            
+            //DEBUG
+            window.viewport = this;
             
             if(!container) {
                 this._$container = $(document);

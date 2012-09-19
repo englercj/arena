@@ -3,11 +3,10 @@ define([
     'jquery',
     'game/lib/viewport',
     'game/lib/controls',
-    'game/lib/constants',
-    //Scripts that modify global
-    'game/vendor/three/three.min',
-    'game/vendor/three/Stats' 
-], function($, Viewport, Controls, CONST) {
+    'game/lib/world',
+    'game/lib/hud',
+    'game/lib/constants'
+], function($, Viewport, Controls, World, HUD, CONST) {
     var Engine = Class.extend({
         init: function(container) {
             //setup game
@@ -16,49 +15,24 @@ define([
                 renderer = this.renderer = new THREE.WebGLRenderer(),
                 view = this.viewport = new Viewport(container, renderer),
                 camera = this.camera = new THREE.PerspectiveCamera(60, view.aspect(), 1, 10000),
-                controls = this.controls = new Controls(view, camera);//new THREE.FirstPersonControls(camera);//
-            
-            //add fog to scene
-            scene.fog = new THREE.FogExp2(0xD6F1FF, 0.0005);
+                controls = this.controls = new Controls(view, camera),//new THREE.FirstPersonControls(camera);
+                world = this.world = new World(scene),
+                hud = this.hud = new HUD();
             
             //setup camera
             camera.position.z = 300;
-            camera.position.y = CONST.UNIT_SIZE * 0.2; //raise camera off the ground
+            camera.position.y = CONST.UNIT_SIZE; //raise camera off the ground
             scene.add(camera);
             
-            //setup camera controls
-            /*controls.movementSpeed = CONST.MOVE_SPEED;
-            controls.lookSpeed = CONST.LOOK_SPEED;
-            controls.lookVertical = false;
-            controls.noFly = true;*/
-
-            //add a mesh
-            var radius = 50,
-                segments = 16,
-                rings = 16;
-
-            var sphere = new THREE.Mesh(
-                new THREE.SphereGeometry(
-                    radius,
-                    segments,
-                    rings
-                ),
-                new THREE.MeshLambertMaterial({
-                    color: 0xCC0000
-                })
-            );
-
-            scene.add(sphere);
-
             //create point light
-            var pLight = new THREE.PointLight(0xFFFFFF);
+            /*var pLight = new THREE.PointLight(0xFFFFFF);
 
             //set position
             pLight.position.x = 10;
             pLight.position.y = 50;
             pLight.position.z = 130;
 
-            scene.add(pLight);
+            scene.add(pLight);*/
 
             var stats = this.stats = new Stats();
             stats.domElement.style.position = 'absolute';
@@ -73,9 +47,18 @@ define([
             //proxy the call so we retain the context
             requestAnimationFrame($.proxy(this._paint, this));
             
-            this.renderer.render(this.scene, this.camera);
+            var delta = this.clock.getDelta();
+            
+            //update stats box
             this.stats.update();
-            this.controls.update(this.clock.getDelta());
+            
+            //update controls
+            this.controls.update(delta);
+            
+            //do trace/collision checks
+            
+            //render scene
+            this.renderer.render(this.scene, this.camera);
         }
     });
     

@@ -1,42 +1,40 @@
 define([
     //Modules
     'jquery',
-    'game/lib/constants',
-    //Scripts that modify global
-    'game/vendor/three/three.min'
+    'game/lib/constants'
 ], function($, CONST) {
     var Controls = Class.extend({
         init: function(viewport, camera) {
             this.viewport = viewport;
             this.camera = camera;
-            
+
             this.target = new THREE.Vector3(0, 0, 0);
-            
+
             this.moveSpeed = CONST.MOVE_SPEED;
             this.lookSpeed = CONST.LOOK_SPEED;
-            
+
             this.lookVertical = true;
             this.activeLook = true;
-            
+
             this.heightSpeed = false;
             this.heightCoef = 1.0;
             this.heightMin = 0;
             this.heightMax = 1;
-            
+
             this.constrainVertical = false;
             this.verticalMin = 0;
             this.verticalMax = Math.PI;
-            
-            this.mouseX = 0;
-            this.mouseY = 0;
-            
+
+            this.mouseMovementX = 0;
+            this.mouseMovementY = 0;
+
             this.lat = 0;
             this.lon = 0;
             this.phi = 0;
             this.theta = 0;
-            
+
             this.autoSpeedFactor = 0.0;
-            
+
             this.moveForward = false;
             this.moveBackward = false;
             this.moveLeft = false;
@@ -44,25 +42,25 @@ define([
             this.moveUp = false;
             this.moveDown = false;
             this.freeze = false;
-            
+
             this.mouseDragOn = false;
 
             this.viewHalfX = 0;
             this.viewHalfY = 0;
-            
+
             this.viewport.on({
                 resize: $.proxy(this.onResize, this),
                 mousedown: $.proxy(this.onMouseDown, this),
                 mouseup: $.proxy(this.onMouseUp, this),
                 mousemove: $.proxy(this.onMouseMove, this)
             });
-            
+
             //hack for catching keydown/up events
             $(document).on({
                 keydown: $.proxy(this.onKeyDown, this),
                 keyup: $.proxy(this.onKeyUp, this)
             });
-            
+
             this.onResize();
         },
         onResize: function(e) {
@@ -71,14 +69,13 @@ define([
         },
         onKeyDown: function(e) {
             if(!document.pointerLockElement) return;
-            console.log(e);
-            //e.preventDefault();
-            
+            e.preventDefault();
+
             switch(e.which) {
                 case 9: //Tab
                     //hide score card
                     break;
-                    
+
                 case 38: //up
                 case 87: //W
                     this.moveForward = true;
@@ -102,25 +99,24 @@ define([
                 case 82: //R
                     this.moveUp = true;
                     break;
-                    
+
                 case 70: //F
                     this.moveDown = true;
                     break;
 
                 case 81: //Q
-                    this.freeze = !this.freeze; break;
+                    this.freeze = !this.freeze;break;
             }
         },
         onKeyUp: function(e) {
             if(!document.pointerLockElement) return;
-            console.log(e);
-            //e.preventDefault();
-            
+            e.preventDefault();
+
             switch(e.which) {
                 case 9: //Tab
                     //hide score card
                     break;
-                
+
                 case 38: //up
                 case 87: //W
                     this.moveForward = false;
@@ -144,7 +140,7 @@ define([
                 case 82: //R
                     //reload
                     break;
-                    
+
                 case 70: //F
                     //drop gun
                     break;
@@ -155,10 +151,9 @@ define([
             }
         },
         onMouseDown: function(e) {
-            console.log(e);
             e.preventDefault();
             e.stopPropagation();
-            
+
             if(this.activeLook) {
                 switch(e.button) {
                     case 0: //left click
@@ -169,14 +164,15 @@ define([
                         break;
                 }
             }
-            
+
             this.mouseDragOn = true;
+            
+            return false;
         },
         onMouseUp: function(e) {
-            console.log(e);
             e.preventDefault();
             e.stopPropagation();
-            
+
             if(this.activeLook) {
                 switch(e.button) {
                     case 0: //left click
@@ -187,35 +183,40 @@ define([
                         break;
                 }
             }
-            
+
             this.mouseDragOn = false;
+            
+            return false;
         },
         onMouseMove: function(e) {
             if(!document.pointerLockElement) return;
-            var movementX = e.originalEvent.movementX       ||
+
+            var moveX = e.originalEvent.movementX       ||
                             e.originalEvent.mozMovementX    ||
                             e.originalEvent.webkitMovementX ||
                             0,
-                movementY = e.originalEvent.movementY       ||
+                moveY = e.originalEvent.movementY       ||
                             e.originalEvent.mozMovementY    ||
                             e.originalEvent.webkitMovementY ||
                             0;
 
+            //if(!moveX || !moveY) return;
+
             //Update the initial coords on mouse move
-            this.mouseX += movementX * CONST.LOOK_SPEED_X;
-            this.mouseY += movementY * -CONST.LOOK_SPEED_Y;
+            this.mouseMovementX = moveX;// * CONST.LOOK_SPEED_X;
+            this.mouseMovementY = moveY;// * -CONST.LOOK_SPEED_Y;
 
             //Update camera position
-            this.camera.position.x = Math.sin(this.mouseX) * 400;
-            this.camera.position.z = Math.cos(this.mouseX) * 400;
-            this.camera.position.y = Math.atan(this.mouseY) * 400;
+            //this.camera.position.x = Math.sin(this.mouseX) * 400;
+            //this.camera.position.z = Math.cos(this.mouseX) * 400;
+            //this.camera.position.y = Math.atan(this.mouseY) * 400;
             /* else {
                 console.log(e);
-                
+
                 //Use standard methods to move around
                 this.coords.x = (e.clientX -  (this.viewport.width() / 2)) * 0.003;
                 this.coords.y = (e.clientY -  (this.viewport.height() / 2));
-                
+
                 this.camera.position.x = Math.cos(this.coords.x) * 300;
                 //this.camera.position.z = Math.sin(this.coords.x) * 300;
                 this.camera.position.y = this.coords.y * -0.4;
@@ -225,16 +226,37 @@ define([
             if(this.freeze) {
                 return;
             }
-            
-            var actualMoveSpeed = delta * this.moveSpeed;
-            
+
+            //Taken from Three.js FirstPersonControls, modified to work with pointer lock
+            var actualMoveSpeed = delta * this.moveSpeed,
+                actualLookSpeed = delta * this.lookSpeed;
+
+            //movement
             if(this.moveForward) this.camera.translateZ(-(actualMoveSpeed + this.autoSpeedFactor));
             if(this.moveBackward) this.camera.translateZ(actualMoveSpeed);
-            
+
             if(this.moveLeft) this.camera.translateX(-actualMoveSpeed);
             if(this.moveRight) this.camera.translateX(actualMoveSpeed);
+
+            //look movement
+            this.lon += this.mouseMovementX;// * actualLookSpeed;
+            this.lat -= this.mouseMovementY/** actualLookSpeed*/ * (this.constrainVertical ? Math.PI / (this.verticalMax - this.verticalMin) : 1);
+
+            this.lat = Math.max(-85, Math.min(85, this.lat));
+            this.phi = (90 - this.lat) * Math.PI / 180;
+            this.theta = this.lon * Math.PI / 180;
+
+            if(this.constrainVertical) {
+                this.phi = THREE.Math.mapLinear(this.phi, 0, Math.PI, this.verticalMin, this.verticalMax);
+            }
+
+            this.target.x = this.camera.position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
+            this.target.y = this.camera.position.y + 100 * Math.cos(this.phi);
+            this.target.z = this.camera.position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
+
+            this.camera.lookAt(this.target);
         }
     });
-    
+
     return Controls;
 });
