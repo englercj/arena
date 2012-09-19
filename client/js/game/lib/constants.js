@@ -3,12 +3,12 @@ define({
     UNIT_SIZE: 50,
     
     //Movement
-    MOVE_SPEED: 100,
+    MOVE_SPEED: 200,
     
     //Look
-    LOOK_SPEED: 0.005,
-    LOOK_SPEED_X: 0.005,
-    LOOK_SPEED_Y: 0.0015,
+    LOOK_SPEED: 0.2,
+    VERTICAL_MIN: 0,
+    VERTICAL_MAX: Math.PI,
     
     //Fog
     FOG_COLOR: 0xD6F1FF,

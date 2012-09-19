@@ -21,12 +21,12 @@ define([
             this.heightMin = 0;
             this.heightMax = 1;
 
-            this.constrainVertical = false;
-            this.verticalMin = 0;
-            this.verticalMax = Math.PI;
+            this.constrainVertical = true;
+            this.verticalMin = CONST.VERTICAL_MIN;
+            this.verticalMax = CONST.VERTICAL_MAX;
 
-            this.mouseMovementX = 0;
-            this.mouseMovementY = 0;
+            this.mouseDeltaX = 0;
+            this.mouseDeltaY = 0;
 
             this.lat = 0;
             this.lon = 0;
@@ -200,36 +200,19 @@ define([
                             e.originalEvent.webkitMovementY ||
                             0;
 
-            //if(!moveX || !moveY) return;
-
             //Update the initial coords on mouse move
-            this.mouseMovementX = moveX;// * CONST.LOOK_SPEED_X;
-            this.mouseMovementY = moveY;// * -CONST.LOOK_SPEED_Y;
-
-            //Update camera position
-            //this.camera.position.x = Math.sin(this.mouseX) * 400;
-            //this.camera.position.z = Math.cos(this.mouseX) * 400;
-            //this.camera.position.y = Math.atan(this.mouseY) * 400;
-            /* else {
-                console.log(e);
-
-                //Use standard methods to move around
-                this.coords.x = (e.clientX -  (this.viewport.width() / 2)) * 0.003;
-                this.coords.y = (e.clientY -  (this.viewport.height() / 2));
-
-                this.camera.position.x = Math.cos(this.coords.x) * 300;
-                //this.camera.position.z = Math.sin(this.coords.x) * 300;
-                this.camera.position.y = this.coords.y * -0.4;
-            }*/
+            this.mouseDeltaX += moveX * this.lookSpeed;
+            this.mouseDeltaY += moveY * this.lookSpeed;
         },
         update: function(delta) {            
             if(this.freeze) {
+                this.mouseDeltaX = 0;
+                this.mouseDeltaY = 0;
                 return;
             }
 
             //Taken from Three.js FirstPersonControls, modified to work with pointer lock
-            var actualMoveSpeed = delta * this.moveSpeed,
-                actualLookSpeed = delta * this.lookSpeed;
+            var actualMoveSpeed = delta * this.moveSpeed;
 
             //movement
             if(this.moveForward) this.camera.translateZ(-(actualMoveSpeed + this.autoSpeedFactor));
@@ -239,8 +222,11 @@ define([
             if(this.moveRight) this.camera.translateX(actualMoveSpeed);
 
             //look movement
-            this.lon += this.mouseMovementX;// * actualLookSpeed;
-            this.lat -= this.mouseMovementY/** actualLookSpeed*/ * (this.constrainVertical ? Math.PI / (this.verticalMax - this.verticalMin) : 1);
+            this.lon += this.mouseDeltaX;
+            this.lat -= this.mouseDeltaY * (this.constrainVertical ? Math.PI / (this.verticalMax - this.verticalMin) : 1);
+
+            this.mouseDeltaX = 0;
+            this.mouseDeltaY = 0;
 
             this.lat = Math.max(-85, Math.min(85, this.lat));
             this.phi = (90 - this.lat) * Math.PI / 180;
