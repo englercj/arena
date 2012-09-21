@@ -5,6 +5,7 @@ require.config({
 
 //wrapper to include globals
 define(['global/class', 'global/game-shim', 'global/events'], function() {
+    
     require(['game/main']);
     
     //TODO: Loading of big resources (maps/models) will HAVE to be done on a webworker
