@@ -1,7 +1,6 @@
 define([
     //Modules
     'jquery',
-    'game/maps/arena',
     'game/lib/constants'
 ], function($, map, CONST) {
     var World = Class.extend({

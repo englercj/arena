@@ -7,55 +7,71 @@ define([
             //start the loader webworker
             this._worker = util.spawnWorker(
                 'js/game/lib/loader-worker.js',
-                $.proxy(this, this._onMessage),
-                $.proxy(this, this._onError)
+                $.proxy(this._onMessage, this),
+                $.proxy(this._onError, this)
             );
             
             this._loading = {};
         },
-        load: function(url, opts, cb) {
-            if(typeof(opts) == 'function') {
-                cb = opts;
-                opts = {};
+        load: function(url, opts) {
+            if(url instanceof Array) {
+                for(var i = 0, len = url.length; i < len; ++i) {
+                    this.load(url[i], opts);
+                }
+                return;
             }
             
             opts = opts || {};
             
-            url = url.replace('js/game/', '..');
-            url = url.replace('js/', '../..');
+            url = url.replace('js/game/', '../');
+            url = url.replace('js/', '../../');
             
-            this._loading[url] = { cb: cb, prog: opts.prog };
+            this._loading[url] = opts;
             this._worker.postMessage({ event: 'load', data: url });
-            console.log(url, opts, cb, this._loading);
         },
         _onMessage: function(msg) {
+            var o = this._loading[msg.data.url];
+            
+            if(!o) return;
+            
             switch(msg.data.event) {
-                case 'success': //data was loaded
-                    if(this._loading[msg.data.url]) {
+                //data was loaded
+                case 'success':
+                    if(o.success && typeof(o.success) == 'function') {
                         try {
-                            if(this._loading[msg.data.url].cb)
-                                this._loading[msg.data.url].cb(null, JSON.parse(e.data.data));
+                                o.success(JSON.parse(msg.data.data), msg.data.url);
                         } catch(e) {
-                            this._loading[msg.data.url].cb(e.message);
+                                o.success(msg.data.data, msg.data.url);
                         }
-                        
-                        delete this._loading[msg.data.url];
                     }
                     break;
-                case 'error': //error occurred
-                    if(this._loading[msg.data.url] && this._loading[msg.data.url].cb) {
-                        this._loading[msg.data.url].cb(msg.data.data);
+                
+                //error occurred
+                case 'error':
+                    if(o.error && typeof(o.error) == 'function') {
+                        o.error(msg.data.data, msg.data.url);
                     }
                     break;
-                case 'complete': //completed a load (could be success or error)
+                
+                //completed a load (could be success or error)
+                case 'complete':
+                    if(o.complete && typeof(o.complete) == 'function') {
+                        o.complete(msg.data.data, msg.data.url);
+                    }
+                    
+                    delete this._loading[msg.data.url];
                     break;
-                case 'progress': //progress of a load
-                    if(this._loading[msg.data.url] && this._loading[msg.data.url].prog) {
-                        this._loading[msg.data.url].prog(msg.data.data);
+                    
+                //progress of a load
+                case 'progress':
+                    if(o.progress && typeof(o.progress) == 'function') {
+                        o.progress(msg.data.data, msg.data.url);
                     }
                     break;
+                    
+                //log message
                 case 'log':
-                    console.log(msg.data.data);
+                    console.log(msg.data);
                     break;
             }
         },

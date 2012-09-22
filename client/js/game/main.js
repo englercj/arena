@@ -20,17 +20,15 @@ require([
     'game/vendor/three/Stats',
     'game/vendor/three/Detector'
 ], function($, util, Loader, Engine) {
-    window.loader = new Loader();
-    window.loader.load('js/game/maps/bird.js');
-    
     $(function() {
+        //Detect if webgl is supported, and if not exit
         if (!Detector.webgl) {
             $('#game').append(Detector.getWebGLErrorMessage());
             return;
         }
         
+        //Initialize engine when startup button is clicked
         var engine;
-        
         $('#btnStart').on('click', function(e) {
             e.preventDefault();
             

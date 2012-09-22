@@ -1,5 +1,4 @@
 onmessage = function(msg) {
-    postMessage({ event: 'log', data: msg.data });
     switch(msg.data.event) {
         case 'load':
             doLoad(msg.data.data);
