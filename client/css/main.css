@@ -1,25 +1,62 @@
-body {
-    background:left top url(../img/metal.jpg) repeat #111;
-}
+body { background:left top url(../img/metal.jpg) repeat #111; }
 
-#game {
+#game { background:#000; display:none; }
+
+#menu {
     background:#000;
-    display:none;
-}
-
-#btnStart {
-    width:400px;
-    height:200px;
+    border:solid 1px #CCC;
+    
+    width:800px;
+    height:500px;
     
     position:absolute;
-    top:-100px;
+    top:-250px;
     left:50%;
     
-    margin-left:-200px;
-    
-    font-size:5em;
+    margin-left:-400px;
 }
 
+#btnStart { display:none; }
+
+#btnStart, #btnDownload { margin:0 auto; }
+
+#bottom {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding-bottom:10px;
+}
+
+#progTotal {
+    width:700px;
+    height:35px;
+    
+    margin:10px auto;
+}
+
+#progPart {
+    width:500px;
+    height:20px;
+    
+    margin:0 auto 10px auto;
+}
+
+.ui-progressbar-text {
+    position: absolute;
+    left: 50%;
+    
+    width: 400px;
+    margin-left: -200px;
+    text-align: center;
+}
+
+#progTotal .ui-progressbar-text { font-size:0.8em; font-weight:bold; line-height:35px; }
+#progPart .ui-progressbar-text { font-size:0.6em; line-height:20px; }
+
+/*
+#progTotal .ui-progressbar-value { text-align:center; font-size:0.8em; line-height:35px; }
+#progPart .ui-progressbar-value { text-align:center; font-size:0.6em; line-height:20px; }
+*/
 /* Sizing Code */
 #horizon {
     display:block;

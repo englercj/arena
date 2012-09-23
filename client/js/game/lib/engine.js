@@ -8,7 +8,7 @@ define([
     'game/lib/constants'
 ], function($, Viewport, Controls, World, HUD, CONST) {
     var Engine = Class.extend({
-        init: function(container) {
+        init: function(container, resources) {
             //setup game
             var scene = this.scene = new THREE.Scene(),
                 clock = this.clock = new THREE.Clock(),
@@ -16,7 +16,7 @@ define([
                 view = this.viewport = new Viewport(container, renderer),
                 camera = this.camera = new THREE.PerspectiveCamera(60, view.aspect(), 1, 10000),
                 controls = this.controls = new Controls(view, camera),//new THREE.FirstPersonControls(camera);
-                world = this.world = new World(scene),
+                world = this.world = new World(scene, resources.maps[0]),
                 hud = this.hud = new HUD();
             
             //setup camera

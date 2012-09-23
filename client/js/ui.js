@@ -16,4 +16,6 @@ $(function() {
         else if(winHeight < 700 || winWidth < 1200)
             $game.addClass('small');
     }
+    
+    $('.progressbar').progressbar();
 });

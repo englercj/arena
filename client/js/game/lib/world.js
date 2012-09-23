@@ -2,22 +2,35 @@ define([
     //Modules
     'jquery',
     'game/lib/constants'
-], function($, map, CONST) {
+], function($, CONST) {
     var World = Class.extend({
-        init: function(scene) {
+        init: function(scene, map) {
             this.scene = scene;
+            
+            var jLoader = new THREE.JSONLoader();
+            jLoader.createModel(map.data, function(geometry) {
+                var material = new THREE.MeshFaceMaterial(),
+                mesh = new THREE.Mesh(geometry, material);
+                
+                mesh.scale.set(50, 50, 50);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                mesh.dynamic = true;
+
+                scene.add(mesh);
+            }, map.texturePath);
             
             //add fog to scene
             scene.fog = new THREE.FogExp2(CONST.FOG_COLOR, CONST.FOG_DENSITY);
             
             //add flat floor
-            scene.add(new THREE.Mesh(
+            /*scene.add(new THREE.Mesh(
                 new THREE.CubeGeometry(10 * CONST.UNIT_SIZE, 10, 10 * CONST.UNIT_SIZE),
                 new THREE.MeshLambertMaterial({color: 0xEDCBA0})
-            ));
+            ));*/
                 
             //add sphere
-            var sphere = new THREE.Mesh(
+            /*var sphere = new THREE.Mesh(
                 new THREE.SphereGeometry(
                     CONST.UNIT_SIZE,
                     16,
@@ -29,7 +42,7 @@ define([
             );
             sphere.position.y = CONST.UNIT_SIZE;
 
-            scene.add(sphere);
+            scene.add(sphere);*/
                 
             //add lighting
             var directionalLight1 = new THREE.DirectionalLight(0xF7EFBE, 0.7);

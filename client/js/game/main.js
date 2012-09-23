@@ -27,13 +27,29 @@ require([
             return;
         }
         
+        //Load resources
+        var resources;
+        $('#btnDownload').on('click', function(e) {
+            e.preventDefault();
+            
+            $(this).attr('disabled', true);
+            
+            var loader = new Loader();
+            loader.loadResources(function(rsrc) {
+                resources = rsrc;
+                
+                $('#btnDownload').hide();
+                $('#btnStart').show();
+            });
+        });
+        
         //Initialize engine when startup button is clicked
         var engine;
         $('#btnStart').on('click', function(e) {
             e.preventDefault();
             
             if(!engine) {
-                engine = new Engine('#game');
+                engine = new Engine('#game', resources);
                 engine.start();
                 
                 $('#btnStart').text('Show Game');
