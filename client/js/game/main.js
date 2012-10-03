@@ -18,7 +18,8 @@ require([
     //Scripts that modify global:
     'game/vendor/three/three.min',
     'game/vendor/three/Stats',
-    'game/vendor/three/Detector'
+    'game/vendor/three/Detector',
+    'game/vendor/physijs/physi'
 ], function($, util, Loader, Engine) {
     $(function() {
         //Detect if webgl is supported, and if not exit
@@ -26,6 +27,10 @@ require([
             $('#game').append(Detector.getWebGLErrorMessage());
             return;
         }
+        
+        //Setup PhysiJS
+        Physijs.scripts.worker = 'js/game/vendor/physijs/physijs_worker.js';
+	Physijs.scripts.ammo = '../ammo/ammo.js'; //this one is relative to the physijs location?? WHY??
         
         //Load resources
         var resources;

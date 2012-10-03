@@ -1,6 +1,12 @@
 //configure require
 require.config({
-    waitSeconds: 2000
+    waitSeconds: 2000,
+    shim: {
+        'game/vendor/physijs/physi': {
+            deps: ['game/vendor/three/three.min'],
+            exports: 'Physijs'
+        }
+    }
 });
 
 //wrapper to include globals

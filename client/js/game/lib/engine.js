@@ -10,7 +10,7 @@ define([
     var Engine = Class.extend({
         init: function(container, resources) {
             //setup game
-            var scene = this.scene = new THREE.Scene(),
+            var scene = this.scene = new Physijs.Scene(),//new THREE.Scene(),
                 clock = this.clock = new THREE.Clock(),
                 renderer = this.renderer = new THREE.WebGLRenderer(),
                 view = this.viewport = new Viewport(container, renderer),
@@ -22,6 +22,7 @@ define([
             //setup camera
             camera.position.z = 300;
             camera.position.y = CONST.UNIT_SIZE; //raise camera off the ground
+            camera.lookAt(scene.position);
             scene.add(camera);
             
             //create point light
@@ -46,6 +47,9 @@ define([
         _paint: function() {
             //proxy the call so we retain the context
             requestAnimationFrame($.proxy(this._paint, this));
+            
+            //simulate physics
+            this.scene.simulate();
             
             var delta = this.clock.getDelta();
             
